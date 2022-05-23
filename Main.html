@@ -5,6 +5,7 @@
     <title>Hrvatski Telekom Prva Liga</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="./teams.js"></script>
+    <script src="./mainVariables.js"></script>
     <style>
         body {
             background-color: magenta;
@@ -16,7 +17,103 @@
 
 </body>
 <script>
+    var teamsTextY = 425;
+    var svg = d3.select("body")
+        .append("svg")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight)
+        .style("border-radius", defaultBorderRadius)
+        .style("background-color", "white")
+        .style("opacity", 0.75);
 
+    var headerText = svg.append("text")
+        .attr("x", 400)
+        .attr("y", 75)
+        .style("font-size", headerTextFontSize)
+        .style("font-family", defaultFontFamily)
+        .style("fill", "magenta")
+        .text("Hrvatski Telekom Prva Liga")
+        .on("mouseover", function () {
+            d3.select(this)
+                .style("fill", "black")
+        })
+        .on("mouseout", function () {
+            d3.select(this)
+                .style("fill", "magenta")
+        });
+
+    var ball = svg.append("image")
+        .attr("width", 60)
+        .attr("height", 60)
+        .attr("x", 100)
+        .attr("y", 100)
+        .attr('xlink:href', './Images/ball.png');
+
+    function ballGoRight() {
+        svg.select("image")
+            .transition()
+            .duration(2500)
+            .attr("transform", "translate(1275,0)")
+            .on("end", ballGoLeft);
+    }
+
+    function ballGoLeft() {
+        svg.select("image")
+            .transition()
+            .duration(2500)
+            .attr("transform", "translate(-50,0)")
+            .on("end", ballGoRight);
+    }
+
+    ballGoRight();
+
+    var top4Text = svg.append("text")
+        .attr("x", 100)
+        .attr("y", 300)
+        .text("Statistika Najboljih Klubova: ")
+        .style("font-family", defaultFontFamily)
+        .style("font-size", sectionTextFontSize);
+
+    var leagueStatsText = svg.append("text")
+        .attr("x", 950)
+        .attr("y", 300)
+        .text("Statistika Nogometne Lige:")
+        .style("font-family", defaultFontFamily)
+        .style("font-size", sectionTextFontSize);
+
+    for (i = 0; i < 4; i++) {
+        svg.append("text")
+            .attr("id", i)
+            .attr("x", 100)
+            .attr("y", teamsTextY)
+            .text(teamsData.teams[i].name)
+            .style("font-family", defaultFontFamily)
+            .style("font-size", normalTextFontSize)
+            .on("mouseover", function () {
+                d3.select(this)
+                    .style("fill", "magenta");
+            })
+            .on("mouseout", function () {
+                d3.select(this)
+                    .style("fill", "black");
+            });
+        teamsTextY += 50;
+    }
+
+    var overallLeagueStatsText = svg.append("text")
+        .attr("x", 950)
+        .attr("y", 425)
+        .text("1. HNL")
+        .style("font-family", defaultFontFamily)
+        .style("font-size", normalTextFontSize)
+        .on("mouseover", function () {
+            d3.select(this)
+                .style("fill", "magenta");
+        })
+        .on("mouseout", function () {
+            d3.select(this)
+                .style("fill", "black");
+        });
 </script>
 
 </html>

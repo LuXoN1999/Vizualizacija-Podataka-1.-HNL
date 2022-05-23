@@ -10,15 +10,6 @@ var teamsData = {
             "cleansheets": 18
         },
         {
-            "name": "GNK Dinamo Zagreb",
-            "location": "Zagreb",
-            "stadium": "Maksimir",
-            "goals": 68,
-            "goalsconceded": 22,
-            "possessionpercentage": 62.6,
-            "cleansheets": 20
-        },
-        {
             "name": "NK Osijek",
             "location": "Osijek",
             "stadium": "Gradski Vrt",
@@ -26,6 +17,15 @@ var teamsData = {
             "goalsconceded": 29,
             "possessionpercentage": 49.2,
             "cleansheets": 17
+        },
+        {
+            "name": "GNK Dinamo Zagreb",
+            "location": "Zagreb",
+            "stadium": "Maksimir",
+            "goals": 68,
+            "goalsconceded": 22,
+            "possessionpercentage": 62.6,
+            "cleansheets": 20
         },
         {
             "name": "NK Rijeka",
@@ -92,5 +92,3 @@ var teamsData = {
         }
     ]
 }
-
-var defaultBorderRadius = "10px";
