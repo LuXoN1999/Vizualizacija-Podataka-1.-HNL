@@ -8,7 +8,7 @@
     <script src="./mainVariables.js"></script>
     <style>
         body {
-            background-color: magenta;
+            background-color: white;
         }
     </style>
 
@@ -18,14 +18,117 @@
 
 </body>
 <script>
+    var currentTeamIndex = 2;
+    var color = ["#b5a6a5", "black"];
+
+    var arc = d3.arc()
+        .innerRadius(innerRadius)
+        .outerRadius(outerRadius);
+
     var svg = d3.select("body")
         .append("svg")
         .attr("width", svgWidth)
         .attr("height", svgHeight)
         .style("border-radius", defaultBorderRadius)
-        .style("background-color", "white")
+        .style("background-color", "#808080")
         .style("opacity", 0.75);
 
+    var clubImage = svg.append("image")
+        .attr("x", clubEmblemX)
+        .attr("y", clubEmblemY)
+        .attr("width", clubEmblemWidth)
+        .attr("height", clubEmblemHeight)
+        .attr("xlink:href", "./Images/GNKDinamoZagreb.png");
+
+    var clubNameText = svg.append("text")
+        .text(teamsData[currentTeamIndex].name)
+        .attr("x", clubHeaderTextX)
+        .attr("y", clubHeaderTextY)
+        .style("font-size", headerTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    var WDLText = svg.append("text")
+        .text("Pobjede/Neriješeno/Porazi")
+        .attr("x", WDLTextX)
+        .attr("y", commonTextY)
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    var playersText = svg.append("text")
+        .text("Igrači: " + (teamsData[currentTeamIndex].totalplayers).toString())
+        .attr("x", playersTextX)
+        .attr("y", commonTextY)
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    var nationalTeamPlayersText = svg.append("text")
+        .text("Reprezentativci: " + teamsData[currentTeamIndex].nationalteamplayers)
+        .attr("x", playersTextX - 175)
+        .attr("y", commonTextY + 50)
+        .style("font-size", smallTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+
+    var foreignPlayersText = svg.append("text")
+        .text("Stranci: " + teamsData[currentTeamIndex].foreignplayers)
+        .attr("x", playersTextX - 175)
+        .attr("y", commonTextY + 275)
+        .style("font-size", smallTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    var pie = d3.pie()
+        .value(function (d) {
+            if (d.name == "HNK Hajduk Split") {
+                return teamsData[currentTeamIndex].nationalteamplayers;
+            }
+            return (teamsData[currentTeamIndex].totalplayers - teamsData[currentTeamIndex].nationalteamplayers) / 9;
+        });
+
+    var pieArcs = svg.selectAll("g.pie")
+        .data(pie(teamsData))
+        .enter()
+        .append("g")
+        .attr("class", "pie")
+        .attr("transform", "translate(" + commonPieChartX + ", " + upperPieChartY + ")");
+
+    pieArcs.append("path")
+        .attr("fill", function (d, i) {
+            if (i == currentTeamIndex) {
+                return color[1];
+            }
+            return color[0];
+        })
+        .attr("d", arc)
+        .attr("stroke", function (d, i) {
+            if (i == currentTeamIndex) {
+                return color[1];
+            }
+            return color[0];
+        });
+
+    var pie2 = d3.pie()
+        .value(function (d) {
+            if (d.name == "HNK Hajduk Split") {
+                return teamsData[currentTeamIndex].foreignplayers;
+            }
+            return (teamsData[currentTeamIndex].totalplayers - teamsData[currentTeamIndex].foreignplayers) / 9;
+        });
+
+    var pieArcs2 = svg.selectAll("g.pie2")
+        .data(pie2(teamsData))
+        .enter()
+        .append("g")
+        .attr("class", "pie")
+        .attr("transform", "translate(" + commonPieChartX + ", " + lowerPieChartY + ")");
+
+    pieArcs2.append("path")
+        .attr("fill", function (d, i) {
+            if (i == currentTeamIndex) {
+                return color[1];
+            }
+            return color[0];
+        })
+        .attr("d", arc);
 </script>
 
 

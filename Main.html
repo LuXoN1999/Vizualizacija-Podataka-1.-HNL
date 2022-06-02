@@ -8,7 +8,7 @@
     <script src="./mainVariables.js"></script>
     <style>
         body {
-            background-color: magenta;
+            background-color: white;
         }
     </style>
 </head>
@@ -23,7 +23,7 @@
         .attr("width", svgWidth)
         .attr("height", svgHeight)
         .style("border-radius", defaultBorderRadius)
-        .style("background-color", "white")
+        .style("background-color", "#808080")
         .style("opacity", 0.75);
 
     var headerText = svg.append("text")
@@ -35,11 +35,11 @@
         .text("Hrvatski Telekom Prva Liga")
         .on("mouseover", function () {
             d3.select(this)
-                .style("fill", "black")
+                .style("fill", "magenta")
         })
         .on("mouseout", function () {
             d3.select(this)
-                .style("fill", "magenta")
+                .style("fill", "black")
         });
 
     var ball = svg.append("image")
@@ -86,7 +86,7 @@
             .attr("id", "team" + i.toString())
             .attr("x", 100)
             .attr("y", teamsTextY)
-            .text(teamsData.teams[i].name)
+            .text(teamsData[i].name)
             .style("font-family", defaultFontFamily)
             .style("font-size", normalTextFontSize)
             .on("mouseover", function () {
@@ -114,7 +114,6 @@
             d3.select(this)
                 .style("fill", "black");
         });
-
 
     d3.select("#team0")
         .on("click", function () {
