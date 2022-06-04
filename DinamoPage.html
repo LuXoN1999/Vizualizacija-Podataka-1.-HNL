@@ -2,10 +2,11 @@
 <html>
 
 <head>
-    <title>GNK Dinamo Zagreb Stats</title>
+    <title>GNK Dinamo Zagreb</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="./teams.js"></script>
     <script src="./mainVariables.js"></script>
+    <script src="./additionalFunctions.js"></script>
     <style>
         body {
             background-color: white;
@@ -19,11 +20,6 @@
 </body>
 <script>
     var currentTeamIndex = 2;
-    var color = ["#b5a6a5", "black"];
-
-    var arc = d3.arc()
-        .innerRadius(innerRadius)
-        .outerRadius(outerRadius);
 
     var svg = d3.select("body")
         .append("svg")
@@ -75,60 +71,132 @@
         .attr("y", commonTextY + 275)
         .style("font-size", smallTextFontSize)
         .style("font-family", defaultFontFamily);
-
-    var pie = d3.pie()
-        .value(function (d) {
-            if (d.name == "HNK Hajduk Split") {
+    var nationalTeamPlayersPie = d3.pie()
+        .value(function (d, i) {
+            if (i == 0) {
                 return teamsData[currentTeamIndex].nationalteamplayers;
             }
-            return (teamsData[currentTeamIndex].totalplayers - teamsData[currentTeamIndex].nationalteamplayers) / 9;
+            else if (i == 1) {
+                return teamsData[currentTeamIndex].totalplayers - teamsData[currentTeamIndex].nationalteamplayers;
+            }
+            else {
+                return 0;
+            }
         });
 
-    var pieArcs = svg.selectAll("g.pie")
-        .data(pie(teamsData))
+    var nationalTeamPlayersPieArcs = svg.selectAll("g.pie")
+        .data(nationalTeamPlayersPie(teamsData))
         .enter()
-        .append("g")
-        .attr("class", "pie")
-        .attr("transform", "translate(" + commonPieChartX + ", " + upperPieChartY + ")");
-
-    pieArcs.append("path")
+        .append("path")
+        .attr("id", function (d, i) { return "pie0_arc" + i })
+        .attr("transform", "translate(" + commonPieChartX + ", " + upperPieChartY + ")")
+        .attr("d", defaultArc)
         .attr("fill", function (d, i) {
-            if (i == currentTeamIndex) {
-                return color[1];
-            }
-            return color[0];
-        })
-        .attr("d", arc)
-        .attr("stroke", function (d, i) {
-            if (i == currentTeamIndex) {
+            if (i == 0) {
                 return color[1];
             }
             return color[0];
         });
 
-    var pie2 = d3.pie()
-        .value(function (d) {
-            if (d.name == "HNK Hajduk Split") {
+    var nationalTeamPlayersPercentageText = svg.append("text")
+        .text(parseFloat((teamsData[currentTeamIndex].nationalteamplayers / teamsData[currentTeamIndex].totalplayers * 100)).toFixed(1) + "%")
+        .attr("x", commonPieChartX + 10)
+        .attr("y", upperPieChartY)
+        .attr("id", "nationalTeamPercentageText")
+        .style("opacity", 0)
+        .style("fill", "red")
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    var foreignPlayersPie = d3.pie()
+        .value(function (d, i) {
+            if (i == 0) {
                 return teamsData[currentTeamIndex].foreignplayers;
             }
-            return (teamsData[currentTeamIndex].totalplayers - teamsData[currentTeamIndex].foreignplayers) / 9;
+            else if (i == 1) {
+                return teamsData[currentTeamIndex].totalplayers - teamsData[currentTeamIndex].foreignplayers;
+            }
+            else {
+                return 0;
+            }
         });
 
-    var pieArcs2 = svg.selectAll("g.pie2")
-        .data(pie2(teamsData))
+    var foreignPlayersPieArcs = svg.selectAll("g.pie")
+        .data(foreignPlayersPie(teamsData))
         .enter()
-        .append("g")
-        .attr("class", "pie")
-        .attr("transform", "translate(" + commonPieChartX + ", " + lowerPieChartY + ")");
-
-    pieArcs2.append("path")
+        .append("path")
+        .attr("id", function (d, i) { return "pie1_arc" + i })
+        .attr("transform", "translate(" + commonPieChartX + "," + lowerPieChartY + ")")
+        .attr("d", defaultArc)
         .attr("fill", function (d, i) {
-            if (i == currentTeamIndex) {
+            if (i == 0) {
                 return color[1];
             }
             return color[0];
+        });
+    var foreignPlayersPercentageText = svg.append("text")
+        .text(parseFloat((teamsData[currentTeamIndex].foreignplayers / teamsData[currentTeamIndex].totalplayers * 100)).toFixed(1) + "%")
+        .attr("x", commonPieChartX + 10)
+        .attr("y", lowerPieChartY)
+        .attr("id", "foreignPlayersPercentageText")
+        .style("opacity", 0)
+        .style("fill", "red")
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    svg.select("#pie0_arc0")
+        .on("mouseover", function () {
+            d3.select(this)
+                .transition()
+                .duration(500)
+                .attr("d", arcOnHover)
+                .style("fill", "red")
+                .style("opacity", 0.5);
+            d3.select("#nationalTeamPercentageText")
+                .transition()
+                .duration(500)
+                .style("opacity", 1);
         })
-        .attr("d", arc);
+        .on("mouseout", function () {
+            d3.select(this)
+                .transition()
+                .duration(500)
+                .attr("d", defaultArc)
+                .style("fill", color[1])
+                .style("opacity", 1);
+            d3.select("#nationalTeamPercentageText")
+                .transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
+
+    svg.select("#pie1_arc0")
+        .on("mouseover", function () {
+            d3.select(this)
+                .transition()
+                .duration(500)
+                .attr("d", arcOnHover)
+                .style("fill", "red")
+                .style("opacity", 0.5);
+            d3.select("#foreignPlayersPercentageText")
+                .transition()
+                .duration(500)
+                .style("opacity", 1);
+        })
+        .on("mouseout", function () {
+            d3.select(this)
+                .transition()
+                .duration(500)
+                .attr("d", defaultArc)
+                .style("fill", color[1])
+                .style("opacity", 1);
+            d3.select("#foreignPlayersPercentageText")
+                .transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
+
+        clearUnnecessaryArcs();
 </script>
 
 
