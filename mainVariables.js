@@ -26,6 +26,7 @@ var clubHeaderTextY = svgHeight / 5;
 var commonTextY = svgHeight / 3;
 var WDLTextX = 25;
 var playersTextX = 600;
+var goalDifferenceTextX = 1000;
 
 //CLUBS PAGE - COMMON PIE CHARTS COORDINATES
 var commonPieChartX = 660;
@@ -39,12 +40,16 @@ var outerRadiusOnHover = 115;
 var defaultArc = d3.arc()
     .innerRadius(innerRadius)
     .outerRadius(outerRadius);
-
 var arcOnHover = d3.arc()
     .innerRadius(innerRadius)
     .outerRadius(outerRadiusOnHover);
 
-
 //PIECHART COLOR
 var color = ["#b5a6a5", "black"];
 
+//BARCHART ATTRIBUTES
+var goalDifferenceBarchartX = goalDifferenceTextX - 50;
+var goalDifferenceBarchartY = svgHeight / 3 + 75;
+var barchartHeight = 350;
+var barchartWidth = 400;
+var barchartTextColor = "#b5a6a5";
