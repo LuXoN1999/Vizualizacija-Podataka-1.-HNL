@@ -32,7 +32,19 @@ var commonPieChartX = 660;
 var upperPieChartY = 375;
 var lowerPieChartY = upperPieChartY + 225;
 
-//PIE CHART ATTRIBUTES
-var outerRadius = 100;
+//PIECHART ATTRIBUTES
 var innerRadius = 0;
+var outerRadius = 100;
+var outerRadiusOnHover = 115;
+var defaultArc = d3.arc()
+    .innerRadius(innerRadius)
+    .outerRadius(outerRadius);
+
+var arcOnHover = d3.arc()
+    .innerRadius(innerRadius)
+    .outerRadius(outerRadiusOnHover);
+
+
+//PIECHART COLOR
+var color = ["#b5a6a5", "black"];
 

@@ -43,7 +43,7 @@ var teamsData = [
         "wins": 20,
         "draws": 5,
         "losses": 11,
-        "totalplayers": 32,
+        "totalplayers": 37,
         "nationalteamplayers": 4,
         "foreignplayers": 17,
         "goals": 71,
