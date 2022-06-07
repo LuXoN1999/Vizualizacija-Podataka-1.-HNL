@@ -9,6 +9,7 @@ var headerTextFontSize = "60px";
 var sectionTextFontSize = "40px";
 var normalTextFontSize = "30px";
 var smallTextFontSize = "20px";
+var ultrasmallTextFontSize = "13px";
 
 //==========CLUB PAGES ATTRIBUTES==========//
 
