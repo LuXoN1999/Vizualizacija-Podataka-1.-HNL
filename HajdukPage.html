@@ -152,6 +152,7 @@
             }
             return color[0];
         });
+
     var foreignPlayersPercentageText = svg.append("text")
         .text(parseFloat((teamsData[currentTeamIndex].foreignplayers / teamsData[currentTeamIndex].totalplayers * 100)).toFixed(1) + "%")
         .attr("x", commonPieChartX + 10)
@@ -218,7 +219,7 @@
 
     var xScale = d3.scaleBand()
         .range([0, barchartWidth])
-        .domain(["Zabijeno", "Primljeno"])
+        .domain(["Zabijeno", "Primljeno"]);
     var yScale = d3.scaleLinear()
         .range([barchartHeight, 0])
         .domain([0, 100]);
@@ -504,7 +505,7 @@
                 .style("opacity", 0.75);
         });
 
-        svg.select("#overallGoalsText2")
+    svg.select("#overallGoalsText2")
         .on("mouseover", function () {
             d3.select(this)
                 .transition()
@@ -533,6 +534,157 @@
                 .duration(500)
                 .style("opacity", 0.75);
         });
+
+    var WDLBarchartContainer = svg.append("g")
+        .attr("transform", "translate(" + WDLBarchartX + "," + WDLBarchartY + ")");
+
+    var yScaleWDL = d3.scaleLinear()
+        .domain([36, 0])
+        .range([0, WDLBarchartHeight]);
+
+    WDLBarchartContainer.append("g")
+        .call(d3.axisLeft(yScaleWDL).ticks(36));
+
+    var scoreInfoText = WDLBarchartContainer.append("text")
+        .text("")
+        .attr("id", "scoreInfo")
+        .attr("x", WDLBarchartWidth / 2 + 20)
+        .style("font-size", smallTextFontSize)
+        .style("font-family", defaultFontFamily)
+        .style("opacity", 0);
+
+    WDLBarchartContainer.selectAll("rect")
+        .data(teamsData)
+        .enter()
+        .append("rect")
+        .attr("id", function (d, i) {
+            if (i == 0) {
+                return "losses";
+            }
+            else if (i == 1) {
+                return "draws";
+            }
+            else if (i == 2) {
+                return "wins";
+            }
+        })
+        .attr("x", 0)
+        .attr("y", function (d, i) {
+            if (i == 0) {
+                return yScaleWDL(totalGamesPlayed);
+            }
+            else if (i == 1) {
+                return yScaleWDL(totalGamesPlayed - teamsData[currentTeamIndex].losses);
+            }
+            else if (i == 2) {
+                return yScaleWDL(totalGamesPlayed - teamsData[currentTeamIndex].losses - teamsData[currentTeamIndex].draws);
+            }
+            return 0;
+        })
+        .attr("height", function (d, i) {
+            if (i == 0) {
+                return yScaleWDL(totalGamesPlayed - teamsData[currentTeamIndex].losses);
+            }
+            else if (i == 1) {
+                return yScaleWDL(totalGamesPlayed - teamsData[currentTeamIndex].draws);
+            }
+            else if (i == 2) {
+                return yScaleWDL(totalGamesPlayed - teamsData[currentTeamIndex].wins);
+
+            }
+            return 0;
+        })
+        .attr("width", 75)
+        .style("fill", function (d, i) {
+            if (i == 0) {
+                return "red";
+            }
+            else if (i == 1) {
+                return "#393d3a";
+            }
+            else if (i == 2) {
+                return "green";
+            }
+        })
+        .style("opacity", 0)
+        .transition()
+        .duration(1250)
+        .attr("x", 20)
+        .style("opacity", 0.75);
+
+    svg.select("#wins")
+        .on("mouseover", function () {
+            d3.select(this)
+                .transition()
+                .duration(500)
+                .style("opacity", 1);
+            d3.select("#scoreInfo")
+                .text("Pobjede:" + teamsData[currentTeamIndex].wins + "(" + (teamsData[currentTeamIndex].wins / totalGamesPlayed * 100).toFixed(1) + "% utakmica)")
+                .attr("y", yScaleWDL(teamsData[currentTeamIndex].wins / 2))
+                .transition()
+                .duration(500)
+                .style("opacity", 1);
+        })
+        .on("mouseout", function () {
+            d3.select(this)
+                .transition()
+                .duration(250)
+                .style("opacity", 0.75);
+            d3.select("#scoreInfo")
+                .transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
+        
+    svg.select("#draws")
+        .on("mouseover", function () {
+            d3.select(this)
+                .transition()
+                .duration(500)
+                .style("opacity", 1);
+            d3.select("#scoreInfo")
+                .text("Neriješeno:" + teamsData[currentTeamIndex].draws + "(" + (teamsData[currentTeamIndex].draws / totalGamesPlayed * 100).toFixed(1) + "% utakmica)")
+                .attr("y", yScaleWDL((teamsData[currentTeamIndex].draws / 2) + teamsData[currentTeamIndex].wins))
+                .transition()
+                .duration(500)
+                .style("opacity", 1);
+        })
+        .on("mouseout", function () {
+            d3.select(this)
+                .transition()
+                .duration(500)
+                .style("opacity", 0.75);
+            d3.select("#scoreInfo")
+                .transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
+
+    svg.select("#losses")
+        .on("mouseover", function () {
+            d3.select(this)
+                .transition()
+                .duration(500)
+                .style("opacity", 1);
+            d3.select("#scoreInfo")
+                .text("Porazi:" + teamsData[currentTeamIndex].losses + "(" + (teamsData[currentTeamIndex].losses / totalGamesPlayed * 100).toFixed(1) + "% utakmica)")
+                .attr("y", yScaleWDL(teamsData[currentTeamIndex].wins + teamsData[currentTeamIndex].draws + (teamsData[currentTeamIndex].losses / 2)))
+                .transition()
+                .duration(500)
+                .style("opacity", 1);
+        })
+        .on("mouseout", function () {
+            d3.select(this)
+                .transition()
+                .duration(500)
+                .style("opacity", 0.75);
+            d3.select("#scoreInfo")
+                .transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
+
+
 </script>
 
 </html>

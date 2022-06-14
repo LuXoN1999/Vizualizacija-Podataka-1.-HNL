@@ -48,9 +48,22 @@ var arcOnHover = d3.arc()
 //PIECHART COLOR
 var color = ["#b5a6a5", "black"];
 
-//BARCHART ATTRIBUTES
+//GOAL DIFFERENCE BARCHART ATTRIBUTES
 var goalDifferenceBarchartX = goalDifferenceTextX - 50;
 var goalDifferenceBarchartY = svgHeight / 3 + 75;
 var barchartHeight = 350;
 var barchartWidth = 400;
-var barchartTextColor = "#b5a6a5";
+
+
+//WDL BAR ATTRIBUTES
+var WDLBarchartX = 50;
+var WDLBarchartY = svgHeight / 3 + 30;
+var WDLBarchartWidth = 150;
+var WDLBarchartHeight = 400;
+
+
+//==========OTHER VARIABLES==========//
+var totalGamesPlayed = 36;
+
+
+
