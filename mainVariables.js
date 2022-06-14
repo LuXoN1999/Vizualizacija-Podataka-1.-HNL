@@ -1,5 +1,5 @@
 //SVG STYLE
-var svgWidth = "100%";
+var svgWidth = 1480;
 var svgHeight = 730;
 var defaultBorderRadius = "10px";
 
@@ -11,7 +11,7 @@ var normalTextFontSize = "30px";
 var smallTextFontSize = "20px";
 var ultrasmallTextFontSize = "13px";
 
-//==========CLUB PAGES ATTRIBUTES==========//
+//====================CLUB PAGES ATTRIBUTES====================//
 
 //CLUB EMBLEMS
 var clubEmblemWidth = 150;
@@ -61,9 +61,17 @@ var WDLBarchartY = svgHeight / 3 + 30;
 var WDLBarchartWidth = 150;
 var WDLBarchartHeight = 400;
 
-
 //==========OTHER VARIABLES==========//
 var totalGamesPlayed = 36;
 
+
+//====================LEAGUE PAGE ATTRIBUTES====================//
+var HNLsvgWidth = 1480;
+var HNLsvgHeight = 1250;
+var leagueLogoWidth = 450;
+var leagueLogoHeight = 150;
+var leagueLogoX = 50;
+var leagueLogoY = svgHeight / 15;
+var commonTitleTextY = svgHeight / 3 + 25;
 
 

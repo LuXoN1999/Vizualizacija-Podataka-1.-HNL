@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>1. HNL</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="./teams.js"></script>
+    <script src="./league.js"></script>
+    <script src="./mainVariables.js"></script>
+</head>
+
+<body>
+
+</body>
+<script>
+    var svg = d3.select("body")
+        .append("svg")
+        .attr("width", HNLsvgWidth)
+        .attr("height", HNLsvgHeight)
+        .style("border-radius", defaultBorderRadius)
+        .style("background-color", "#808080")
+        .style("opacity", 0.75);
+
+    svg.append("image")
+        .attr("x", leagueLogoX)
+        .attr("y", leagueLogoY)
+        .attr("width", leagueLogoWidth)
+        .attr("height", leagueLogoHeight)
+        .attr("xlink:href", "./Images/HNL.png");
+
+    svg.append("text")
+        .text("OMJER KLUBOVA")
+        .attr("x", svgWidth / 2 - 250)
+        .attr("y", commonTitleTextY)
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    svg.append("text")
+        .text("STATISTIKA LIGE")
+        .attr("x", svgWidth / 2 + 10)
+        .attr("y", commonTitleTextY)
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    svg.append("line")
+        .attr("x1", HNLsvgWidth / 2)
+        .attr("y1", commonTitleTextY - 50)
+        .attr("x2", HNLsvgWidth / 2)
+        .attr("y2", HNLsvgHeight)
+        .style("stroke-width", 10)
+        .style("stroke", "black");
+
+</script>
+
+</html>
