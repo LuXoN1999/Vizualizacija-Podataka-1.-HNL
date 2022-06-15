@@ -4,9 +4,10 @@
 <head>
     <title>1. HNL</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="./teams.js"></script>
-    <script src="./league.js"></script>
     <script src="./mainVariables.js"></script>
+    <script src="./league.js"></script>
+    <script src="./teams.js"></script>
+
 </head>
 
 <body>
@@ -30,7 +31,7 @@
 
     svg.append("text")
         .text("OMJER KLUBOVA")
-        .attr("x", svgWidth / 2 - 250)
+        .attr("x", svgWidth / 2 - 265)
         .attr("y", commonTitleTextY)
         .style("font-size", normalTextFontSize)
         .style("font-family", defaultFontFamily);
@@ -49,6 +50,106 @@
         .attr("y2", HNLsvgHeight)
         .style("stroke-width", 10)
         .style("stroke", "black");
+
+    var goalRatioText = svg.append("text")
+        .attr("x", 175)
+        .attr("y", commonTitleTextY + 100)
+        .text("Omjer golova")
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    var goalRatioScatterplotContainer = svg.append("g")
+        .attr("transform", "translate(" + commonClubRatioElementX + "," + goalRatioScatterplotY + ")");
+
+    var scoredGoalsArray = teamsData.map(object => { return object.goals; })
+    var concededGoalsArray = teamsData.map(object => { return object.goalsconceded; })
+
+    var goalRatioScatterplotXScale = d3.scaleLinear()
+        .range([0, defaultClubRatioElementWidth])
+        .domain([Math.min(...concededGoalsArray) - 5, Math.max(...concededGoalsArray) + 5]);
+    var goalRatioScatterplotYScale = d3.scaleLinear()
+        .range([defaultClubRatioElementHeight, 0])
+        .domain([Math.min(...scoredGoalsArray) - 5, Math.max(...scoredGoalsArray) + 5]);
+
+    var xAxisGoalRatio = goalRatioScatterplotContainer.append("g")
+        .attr("transform", "translate(0," + defaultClubRatioElementHeight + ")")
+        .call(d3.axisBottom(goalRatioScatterplotXScale).ticks(15));
+
+    var yAxisGoalRatio = goalRatioScatterplotContainer.append("g")
+        .call(d3.axisLeft(goalRatioScatterplotYScale).ticks(15))
+
+    goalRatioScatterplotContainer.append("text")
+        .text("Primljeni golovi")
+        .attr("x", defaultClubRatioElementWidth / 2)
+        .attr("y", defaultClubRatioElementHeight + 45)
+        .style("font-size", smallTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    goalRatioScatterplotContainer.append("text")
+        .text("Zabijeni golovi")
+        .attr("y", -45)
+        .attr("x", -150)
+        .attr("transform", "rotate(-90)")
+        .style("font-size", smallTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    var tooltip = goalRatioScatterplotContainer
+        .append("text")
+        .attr("font-weight", 550)
+        .style("opacity", 0)
+        .style("font-size", ultrasmallTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    goalRatioScatterplotContainer.append("g")
+        .selectAll("g")
+        .data(teamsData)
+        .enter()
+        .append("circle")
+        .attr("id", function (d, i) { return d.name; })
+        .attr("cx", function (d, i) { return goalRatioScatterplotXScale(d.goalsconceded); })
+        .attr("cy", function (d, i) { return goalRatioScatterplotYScale(d.goals); })
+        .attr("r", 7)
+        .style("fill", function (d) {
+            switch (d.name) {
+                case "HNK Hajduk Split": return "white"; break;
+                case "NK Osijek": return "#5cb7e8"; break;
+                case "GNK Dinamo Zagreb": return "blue"; break;
+                case "NK Rijeka": return "lightblue"; break;
+                case "HNK Gorica": return "red"; break;
+                case "NK Lokomotiva": return "blue"; break;
+                case "NK Slaven Belupo": return "blue"; break;
+                case "HNK Sibenik": return "#ff7300"; break;
+                case "NK Istra 1961": return "green"; break;
+                case "NK Hrvatski Dragovoljac": return "black"; break;
+            }
+        })
+        .on("mouseover", function (d, i) {
+            var currentObject = i;
+            var currentElementX = d3.select(this).attr("cx");
+            var currentElementY = d3.select(this).attr("cy");
+            d3.select(this)
+                .transition()
+                .duration(100)
+                .attr("r", 10)
+                .style("stroke", "black");
+            tooltip
+                .attr("x", currentElementX - 15)
+                .attr("y", currentElementY - 15)
+                .text(currentObject.name + " (scored: " + currentObject.goals + ",conceded: " + currentObject.goalsconceded + ")")
+                .style("opacity", 1);
+            tooltip.raise();
+        })
+        .on("mouseout", function (d, i) {
+            d3.select(this)
+                .style("stroke", "#808080")
+                .transition()
+                .duration(100)
+                .attr("r", 7);
+            tooltip
+                .attr("x", 0)
+                .attr("y", 0)
+                .style("opacity", 0);
+        });
 
 </script>
 

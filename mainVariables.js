@@ -66,12 +66,19 @@ var totalGamesPlayed = 36;
 
 
 //====================LEAGUE PAGE ATTRIBUTES====================//
-var HNLsvgWidth = 1480;
+var HNLsvgWidth = 1465;
 var HNLsvgHeight = 1250;
 var leagueLogoWidth = 450;
 var leagueLogoHeight = 150;
 var leagueLogoX = 50;
 var leagueLogoY = svgHeight / 15;
-var commonTitleTextY = svgHeight / 3 + 25;
+var commonTitleTextY = svgHeight / 3;
+var commonClubRatioElementX = svgWidth / 4 - 250;
+var defaultClubRatioElementWidth = 350;
+var defaultClubRatioElementHeight = 350;
+
+
+//==========GOAL RATIO SCATTERPLOT ATTRIBUTES==========//
+var goalRatioScatterplotY = 400;
 
 
