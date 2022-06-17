@@ -7,6 +7,7 @@
     <script src="./mainVariables.js"></script>
     <script src="./league.js"></script>
     <script src="./teams.js"></script>
+    <script src="./additionalFunctions.js"></script>
 
 </head>
 
@@ -53,14 +54,14 @@
 
     //GOAL RATIO  SCATTER PLOT
     var goalRatioText = svg.append("text")
-        .attr("x", 175)
-        .attr("y", commonTitleTextY + 100)
         .text("Omjer golova")
+        .attr("x", commonGoalRatioTextElementX)
+        .attr("y", commonFirstElementY - textElementDifference)
         .style("font-size", normalTextFontSize)
         .style("font-family", defaultFontFamily);
 
     var goalRatioScatterplotContainer = svg.append("g")
-        .attr("transform", "translate(" + commonClubRatioElementX + "," + goalRatioScatterplotY + ")");
+        .attr("transform", "translate(" + commonClubRatioElementX + "," + commonFirstElementY + ")");
 
     var scoredGoalsArray = teamsData.map(object => { return object.goals; })
     var concededGoalsArray = teamsData.map(object => { return object.goalsconceded; })
@@ -129,10 +130,10 @@
             var currentElementX = d3.select(this).attr("cx");
             var currentElementY = d3.select(this).attr("cy");
             d3.select(this)
+                .style("stroke", "black")
                 .transition()
                 .duration(100)
                 .attr("r", 10)
-                .style("stroke", "black");
             tooltip
                 .attr("x", currentElementX - 15)
                 .attr("y", currentElementY - 15)
@@ -161,13 +162,13 @@
 
     var cleansheetsText = svg.append("text")
         .text("Utakmice bez primljenih golova")
-        .attr("x", commonClubRatioElementX)
-        .attr("y", commonTitleTextY + defaultClubRatioElementHeight + 300)
+        .attr("x", commonGoalRatioTextElementX)
+        .attr("y", commonSecondElementY - textElementDifference)
         .style("font-size", normalTextFontSize)
         .style("font-family", defaultFontFamily);
 
     var cleansheetsBarchartContainer = svg.append("g")
-        .attr("transform", "translate(" + commonClubRatioElementX + "," + (commonTitleTextY + defaultClubRatioElementHeight + 375) + " )");
+        .attr("transform", "translate(" + commonClubRatioElementX + "," + commonSecondElementY + " )");
 
     var cleansheetsArray = teamsData.map(object => { return object.cleansheets; })
 
@@ -242,14 +243,14 @@
     //OVERALL GOALS RATIO PIECHART
 
     var overallGoalsText = svg.append("text")
-        .text("Golovi: " + leagueDataBySeasons[0].goalsscored)
-        .attr("x", commonClubRatioElementX)
-        .attr("y", commonTitleTextY + defaultClubRatioElementHeight + 950)
+        .text("Golovi: " + leagueDataBySeasons[4].goalsscored)
+        .attr("x", commonGoalRatioTextElementX)
+        .attr("y", commonThirdElementY)
         .style("font-size", normalTextFontSize)
         .style("font-family", defaultFontFamily);
 
     var overallGoalsContainer = svg.append("g")
-        .attr("transform", "translate(" + (overallGoalsPiechartX + 75) + "," + (commonTitleTextY + defaultClubRatioElementHeight + 1150) + " )");
+        .attr("transform", "translate(" + (overallGoalsPiechartX + 75) + "," + (commonThirdElementY + 200) + " )");
 
     var overallGoalsPie = d3.pie()
         .value(function (d) { return d.goals; });
@@ -275,7 +276,7 @@
         .data(overallGoalsPie(teamsData))
         .enter()
         .append("path")
-        .attr("transform", "translate(" + (overallGoalsPiechartX + 75) + ", " + (commonTitleTextY + defaultClubRatioElementHeight + 1150) + ")")
+        .attr("transform", "translate(" + (overallGoalsPiechartX + 75) + ", " + (commonThirdElementY + 200) + ")")
         .attr("d", goalsDefaultArc)
         .attr("stroke", "#808080")
         .style("stroke-width", "3px")
@@ -287,7 +288,7 @@
                 .duration(250)
                 .style("fill", "red");
             overallGoalsPercentageText
-                .text((i.data.goals / leagueDataBySeasons[0].goalsscored * 100).toFixed(1) + "%")
+                .text((i.data.goals / leagueDataBySeasons[4].goalsscored * 100).toFixed(1) + "%")
                 .transition()
                 .duration(200)
                 .style("opacity", 1);
@@ -342,16 +343,91 @@
         .style("font-family", defaultFontFamily);
 
 
-</script>
+    var winsLinechartText = svg.append("text")
+        .text("Sveukupna vrijednost(€)")
+        .attr("x", commonLeagueStatsTextElementX)
+        .attr("y", commonFirstElementY - textElementDifference)
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily);
 
 
+    var marketValueContainer = svg.append("g")
+        .attr("transform", "translate(" + commonLeagueStatsElementX + "," + commonFirstElementY + ")");
 
+    var marketValueBySeasonsArray = leagueDataBySeasons.map(object => { return object.marketvalue / 1000000; })
+    var seasonsArray = leagueDataBySeasons.map(object => { return object.seasonyear; })
 
+    var marketValueXScale = d3.scaleBand()
+        .domain(seasonsArray)
+        .range([0, defaultLeagueStatsElementWidth])
+        .padding(1);
 
+    var marketValueYScale = d3.scaleLinear()
+        .domain([(Math.max(...marketValueBySeasonsArray) + 15), (Math.min(...marketValueBySeasonsArray) - 15)])
+        .range([0, defaultLeagueStatsElementHeight]);
 
+    marketValueContainer.append("g")
+        .attr("transform", "translate(0," + defaultLeagueStatsElementHeight + ")")
+        .call(d3.axisBottom(marketValueXScale));
 
+    marketValueContainer.append("g")
+        .call(d3.axisLeft(marketValueYScale));
 
+    marketValueContainer.append("path")
+        .datum(leagueDataBySeasons)
+        .attr("fill", "none")
+        .attr("stroke", "black")
+        .attr("stroke-width", 2)
+        .attr("d", d3.line()
+            .x(function (d) { return marketValueXScale(d.seasonyear); })
+            .y(function (d) { return marketValueYScale(d.marketvalue / 1000000); })
+        )
 
+    var marketValueText = marketValueContainer.append("text")
+        .style("opacity", 0)
+        .attr("font-weight", 550)
+        .style("font-size", ultrasmallTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    marketValueContainer.append("g")
+        .selectAll("dot")
+        .data(leagueDataBySeasons)
+        .enter()
+        .append("circle")
+        .attr("cx", function (d) { return marketValueXScale(d.seasonyear); })
+        .attr("cy", function (d) { return marketValueYScale(d.marketvalue / 1000000); })
+        .attr("r", 5)
+        .attr("fill", "black")
+        .on("mouseover", function (d, i) {
+            var currentObject = i;
+            d3.select(this)
+                .style("fill", "red")
+                .transition()
+                .duration(100)
+                .attr("r", 7);
+            marketValueText
+                .text(currentObject.marketvalue / 1000000 + "M €")
+                .attr("x", function (d) { return marketValueXScale(currentObject.seasonyear); })
+                .attr("y", function (d) { return marketValueYScale(currentObject.marketvalue / 1000000) - 15; })
+                .style("opacity", 1);
+        })
+        .on("mouseout", function () {
+            d3.select(this)
+                .style("fill", "black")
+                .transition()
+                .duration(100)
+                .attr("r", 5);
+            marketValueText
+                .style("opacity", 0);
+        })
+
+    marketValueContainer.append("text")
+        .text("Vrijednost[M€]")
+        .attr("y", -45)
+        .attr("x", -150)
+        .attr("transform", "rotate(-90)")
+        .style("font-size", smallTextFontSize)
+        .style("font-family", defaultFontFamily);
 
 </script>
 

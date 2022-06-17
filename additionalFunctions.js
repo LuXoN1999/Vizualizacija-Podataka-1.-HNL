@@ -10,3 +10,17 @@ function clearUnnecessaryArcs() {
         }
     });
 }
+
+function overallMinWins() {
+    var minHomeWins = Math.min(...homeWinsBySeason);
+    var minAwayWins = Math.min(...awayWinsBySeason);
+    if (minHomeWins <= minAwayWins) { return minHomeWins; }
+    return minAwayWins;
+}
+
+function overallMaxWins() {
+    var maxHomeWins = Math.max(...homeWinsBySeason);
+    var maxAwayWins = Math.max(...awayWinsBySeason);
+    if (maxHomeWins >= maxAwayWins) { return maxHomeWins; }
+    return maxAwayWins;
+}
