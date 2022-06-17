@@ -55,7 +55,6 @@ var goalDifferenceBarchartY = svgHeight / 3 + 75;
 var barchartHeight = 350;
 var barchartWidth = 400;
 
-
 //WDL BAR ATTRIBUTES
 var WDLBarchartX = 50;
 var WDLBarchartY = svgHeight / 3 + 30;
@@ -78,16 +77,11 @@ var commonClubRatioElementX = svgWidth / 4 - 250;
 var defaultClubRatioElementWidth = 350;
 var defaultClubRatioElementHeight = 350;
 
-
 //==========GOAL RATIO SCATTERPLOT ATTRIBUTES==========//
 var goalRatioScatterplotY = 400;
 
-
-
-
 //==========CLEANSHEETS BARCHART ATTRIBUTES==========//
 var cleansheetsBarchartY = goalRatioScatterplotY + 350;
-
 
 //==========OVERALL GOALS PIECHART ATTRIBUTES==========//
 var innerRadius2 = 95;
@@ -103,8 +97,8 @@ var goalsArcOnHover = d3.arc()
     .outerRadius(goalsRadius * 0.8);
 
 var goalsOuterArc = d3.arc()
-    .innerRadius(goalsRadius * 0.99)
-    .outerRadius(goalsRadius * 0.99);
+    .innerRadius(goalsRadius)
+    .outerRadius(goalsRadius);
 
 var overallGoalsPiechartX = 2.5 * commonClubRatioElementX;
 var arcColors = ["cornflowerblue", "green", "black", "teal", "magenta", "papayawhip", "navy", "red", "sienna", "purple", "blue"];

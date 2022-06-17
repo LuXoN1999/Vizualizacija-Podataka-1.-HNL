@@ -254,6 +254,23 @@
     var overallGoalsPie = d3.pie()
         .value(function (d) { return d.goals; });
 
+    var overallGoalsPercentageText = overallGoalsContainer.append("text")
+        .text("")
+        .attr("x", 10 - innerRadius2 / 2)
+        .attr("y", -5)
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily)
+        .style("fill", "red")
+        .style("opacity", 0);
+    var additionalText = overallGoalsContainer.append("text")
+        .text("od svih golova")
+        .attr("x", -65)
+        .attr("y", 15)
+        .style("font-size", smallTextFontSize)
+        .style("font-family", defaultFontFamily)
+        .style("fill", "red")
+        .style("opacity", 0);
+
     var overallGoalsPieArcs = svg.selectAll("g.pie")
         .data(overallGoalsPie(teamsData))
         .enter()
@@ -263,17 +280,31 @@
         .attr("stroke", "#808080")
         .style("stroke-width", "3px")
         .style("fill", "black")
-        .on("mouseover", function () {
+        .on("mouseover", function (d, i) {
+            var currentObject = i;
             d3.select(this)
                 .transition()
                 .duration(250)
                 .style("fill", "red");
+            overallGoalsPercentageText
+                .text((i.data.goals / leagueDataBySeasons[0].goalsscored * 100).toFixed(1) + "%")
+                .transition()
+                .duration(200)
+                .style("opacity", 1);
+            additionalText
+                .transition()
+                .duration(200)
+                .style("opacity", 1);
         })
         .on("mouseout", function () {
             d3.select(this)
                 .transition()
                 .duration(250)
                 .style("fill", "black");
+            overallGoalsPercentageText
+                .style("opacity", 0);
+            additionalText
+                .style("opacity", 0);
         })
 
     overallGoalsContainer.selectAll("allPolylines")
@@ -291,6 +322,7 @@
             posC[0] = goalsRadius * 0.95 * (midangle < Math.PI ? 1 : -1);
             return [posA, posB, posC];
         });
+
     overallGoalsContainer.selectAll("allLabels")
         .data(overallGoalsPie(teamsData))
         .enter()
@@ -308,6 +340,7 @@
         })
         .style("font-size", goalsPiechartLabelFontSize)
         .style("font-family", defaultFontFamily);
+
 
 </script>
 
