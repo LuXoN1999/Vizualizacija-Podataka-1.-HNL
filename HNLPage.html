@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>1. HNL</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="./mainVariables.js"></script>
+    <script src="./league.js"></script>
+    <script src="./teams.js"></script>
+
+</head>
+
+<body>
+
+</body>
+<script>
+    var svg = d3.select("body")
+        .append("svg")
+        .attr("width", HNLsvgWidth)
+        .attr("height", HNLsvgHeight)
+        .style("border-radius", defaultBorderRadius)
+        .style("background-color", "#808080")
+        .style("opacity", 0.75);
+
+    svg.append("image")
+        .attr("x", leagueLogoX)
+        .attr("y", leagueLogoY)
+        .attr("width", leagueLogoWidth)
+        .attr("height", leagueLogoHeight)
+        .attr("xlink:href", "./Images/HNL.png");
+
+    svg.append("text")
+        .text("OMJER KLUBOVA")
+        .attr("x", svgWidth / 2 - 265)
+        .attr("y", commonTitleTextY)
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    svg.append("text")
+        .text("STATISTIKA LIGE")
+        .attr("x", svgWidth / 2 + 10)
+        .attr("y", commonTitleTextY)
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    svg.append("line")
+        .attr("x1", HNLsvgWidth / 2)
+        .attr("y1", commonTitleTextY - 50)
+        .attr("x2", HNLsvgWidth / 2)
+        .attr("y2", HNLsvgHeight)
+        .style("stroke-width", 10)
+        .style("stroke", "black");
+
+    //GOAL RATIO  SCATTER PLOT
+    var goalRatioText = svg.append("text")
+        .attr("x", 175)
+        .attr("y", commonTitleTextY + 100)
+        .text("Omjer golova")
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    var goalRatioScatterplotContainer = svg.append("g")
+        .attr("transform", "translate(" + commonClubRatioElementX + "," + goalRatioScatterplotY + ")");
+
+    var scoredGoalsArray = teamsData.map(object => { return object.goals; })
+    var concededGoalsArray = teamsData.map(object => { return object.goalsconceded; })
+
+    var goalRatioScatterplotXScale = d3.scaleLinear()
+        .range([0, defaultClubRatioElementWidth])
+        .domain([Math.min(...concededGoalsArray) - 5, Math.max(...concededGoalsArray) + 5]);
+    var goalRatioScatterplotYScale = d3.scaleLinear()
+        .range([defaultClubRatioElementHeight, 0])
+        .domain([Math.min(...scoredGoalsArray) - 5, Math.max(...scoredGoalsArray) + 5]);
+
+    var xAxisGoalRatio = goalRatioScatterplotContainer.append("g")
+        .attr("transform", "translate(0," + defaultClubRatioElementHeight + ")")
+        .call(d3.axisBottom(goalRatioScatterplotXScale).ticks(15));
+
+    var yAxisGoalRatio = goalRatioScatterplotContainer.append("g")
+        .call(d3.axisLeft(goalRatioScatterplotYScale).ticks(15))
+
+    goalRatioScatterplotContainer.append("text")
+        .text("Primljeni golovi")
+        .attr("x", defaultClubRatioElementWidth / 2)
+        .attr("y", defaultClubRatioElementHeight + 45)
+        .style("font-size", smallTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    goalRatioScatterplotContainer.append("text")
+        .text("Zabijeni golovi")
+        .attr("y", -45)
+        .attr("x", -150)
+        .attr("transform", "rotate(-90)")
+        .style("font-size", smallTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    var tooltip = goalRatioScatterplotContainer
+        .append("text")
+        .attr("font-weight", 550)
+        .style("opacity", 0)
+        .style("font-size", ultrasmallTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    goalRatioScatterplotContainer.append("g")
+        .selectAll("g")
+        .data(teamsData)
+        .enter()
+        .append("circle")
+        .attr("id", function (d, i) { return d.name; })
+        .attr("cx", 0)
+        .attr("cy", defaultClubRatioElementHeight)
+        .attr("r", 7)
+        .style("fill", function (d) {
+            switch (d.name) {
+                case "HNK Hajduk Split": return "white"; break;
+                case "NK Osijek": return "#5cb7e8"; break;
+                case "GNK Dinamo Zagreb": return "blue"; break;
+                case "NK Rijeka": return "lightblue"; break;
+                case "HNK Gorica": return "red"; break;
+                case "NK Lokomotiva": return "blue"; break;
+                case "NK Slaven Belupo": return "blue"; break;
+                case "HNK Sibenik": return "#ff7300"; break;
+                case "NK Istra 1961": return "green"; break;
+                case "NK Hrvatski Dragovoljac": return "black"; break;
+            }
+        })
+        .on("mouseover", function (d, i) {
+            var currentObject = i;
+            var currentElementX = d3.select(this).attr("cx");
+            var currentElementY = d3.select(this).attr("cy");
+            d3.select(this)
+                .transition()
+                .duration(100)
+                .attr("r", 10)
+                .style("stroke", "black");
+            tooltip
+                .attr("x", currentElementX - 15)
+                .attr("y", currentElementY - 15)
+                .text(currentObject.name + " (zabijeno: " + currentObject.goals + ",primljeno: " + currentObject.goalsconceded + ")")
+                .style("opacity", 1);
+            tooltip.raise();
+        })
+        .on("mouseout", function (d, i) {
+            d3.select(this)
+                .style("stroke", "#808080")
+                .transition()
+                .duration(100)
+                .attr("r", 7);
+            tooltip
+                .attr("x", 0)
+                .attr("y", 0)
+                .style("opacity", 0);
+        })
+        .transition()
+        .duration(1500)
+        .attr("cx", function (d, i) { return goalRatioScatterplotXScale(d.goalsconceded); })
+        .attr("cy", function (d, i) { return goalRatioScatterplotYScale(d.goals); })
+
+
+    //CLEANSHEETS BARCHART
+
+    var cleansheetsText = svg.append("text")
+        .text("Utakmice bez primljenih golova")
+        .attr("x", commonClubRatioElementX)
+        .attr("y", commonTitleTextY + defaultClubRatioElementHeight + 300)
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    var cleansheetsBarchartContainer = svg.append("g")
+        .attr("transform", "translate(" + commonClubRatioElementX + "," + (commonTitleTextY + defaultClubRatioElementHeight + 375) + " )");
+
+    var cleansheetsArray = teamsData.map(object => { return object.cleansheets; })
+
+    var cleansheetsBarchartXScale = d3.scaleBand()
+        .range([0, defaultClubRatioElementWidth])
+        .domain(teamsData.map(function (d) { return d.name; }))
+        .padding(0.2);
+
+    var cleansheetsBarchartYScale = d3.scaleLinear()
+        .range([defaultClubRatioElementHeight, 0])
+        .domain([0, Math.max(...cleansheetsArray)]);
+
+    cleansheetsBarchartContainer.append("g")
+        .attr("transform", "translate(0," + defaultClubRatioElementWidth + ")")
+        .call(d3.axisBottom(cleansheetsBarchartXScale))
+        .selectAll("text")
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end")
+        .style("font-size", ultrasmallTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    cleansheetsBarchartContainer.append("g")
+        .call(d3.axisLeft(cleansheetsBarchartYScale));
+
+    cleansheetsBarchartContainer.append("text")
+        .attr("id", "cleansheetsRectText")
+        .attr("x", 0)
+        .attr("y", 0)
+        .style("font-size", smallTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    cleansheetsBarchartContainer.selectAll("mybar")
+        .data(teamsData)
+        .enter()
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", function (d) { return cleansheetsBarchartYScale(d.cleansheets); })
+        .attr("width", cleansheetsBarchartXScale.bandwidth())
+        .attr("height", function (d) { return defaultClubRatioElementHeight - cleansheetsBarchartYScale(d.cleansheets); })
+        .style("opacity", 0)
+        .style("fill", "black")
+        .on("mouseover", function (d, i) {
+            var currentObject = i;
+            d3.select(this)
+                .transition()
+                .duration(250)
+                .style("fill", "red");
+            d3.select("#cleansheetsRectText")
+                .text(currentObject.cleansheets)
+                .attr("x", function () {
+                    if (currentObject.cleansheets > 9) {
+                        return cleansheetsBarchartXScale(currentObject.name) + cleansheetsBarchartXScale.bandwidth() / 4 - 5;
+                    }
+                    return cleansheetsBarchartXScale(currentObject.name) + cleansheetsBarchartXScale.bandwidth() / 4;
+                })
+                .attr("y", cleansheetsBarchartYScale(currentObject.cleansheets) - 1)
+                .style("opacity", 1);
+        })
+        .on("mouseout", function (d, i) {
+            d3.select(this)
+                .transition()
+                .duration(250)
+                .style("fill", "black");
+            d3.select("#cleansheetsRectText")
+                .style("opacity", 0);
+        })
+        .transition()
+        .duration(1500)
+        .attr("x", function (d) { return cleansheetsBarchartXScale(d.name); })
+        .style("opacity", 1);
+
+    //OVERALL GOALS RATIO PIECHART
+
+    var overallGoalsText = svg.append("text")
+        .text("Golovi: " + leagueDataBySeasons[0].goalsscored)
+        .attr("x", commonClubRatioElementX)
+        .attr("y", commonTitleTextY + defaultClubRatioElementHeight + 950)
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    var overallGoalsContainer = svg.append("g")
+        .attr("transform", "translate(" + (overallGoalsPiechartX + 75) + "," + (commonTitleTextY + defaultClubRatioElementHeight + 1150) + " )");
+
+    var overallGoalsPie = d3.pie()
+        .value(function (d) { return d.goals; });
+
+    var overallGoalsPercentageText = overallGoalsContainer.append("text")
+        .text("")
+        .attr("x", 10 - innerRadius2 / 2)
+        .attr("y", -5)
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily)
+        .style("fill", "red")
+        .style("opacity", 0);
+    var additionalText = overallGoalsContainer.append("text")
+        .text("od svih golova")
+        .attr("x", -65)
+        .attr("y", 15)
+        .style("font-size", smallTextFontSize)
+        .style("font-family", defaultFontFamily)
+        .style("fill", "red")
+        .style("opacity", 0);
+
+    var overallGoalsPieArcs = svg.selectAll("g.pie")
+        .data(overallGoalsPie(teamsData))
+        .enter()
+        .append("path")
+        .attr("transform", "translate(" + (overallGoalsPiechartX + 75) + ", " + (commonTitleTextY + defaultClubRatioElementHeight + 1150) + ")")
+        .attr("d", goalsDefaultArc)
+        .attr("stroke", "#808080")
+        .style("stroke-width", "3px")
+        .style("fill", "black")
+        .on("mouseover", function (d, i) {
+            var currentObject = i;
+            d3.select(this)
+                .transition()
+                .duration(250)
+                .style("fill", "red");
+            overallGoalsPercentageText
+                .text((i.data.goals / leagueDataBySeasons[0].goalsscored * 100).toFixed(1) + "%")
+                .transition()
+                .duration(200)
+                .style("opacity", 1);
+            additionalText
+                .transition()
+                .duration(200)
+                .style("opacity", 1);
+        })
+        .on("mouseout", function () {
+            d3.select(this)
+                .transition()
+                .duration(250)
+                .style("fill", "black");
+            overallGoalsPercentageText
+                .style("opacity", 0);
+            additionalText
+                .style("opacity", 0);
+        })
+
+    overallGoalsContainer.selectAll("allPolylines")
+        .data(overallGoalsPie(teamsData))
+        .enter()
+        .append("polyline")
+        .attr("stroke", "black")
+        .style("fill", "none")
+        .attr("stroke-width", 2)
+        .attr("points", function (d) {
+            var posA = goalsDefaultArc.centroid(d);
+            var posB = goalsOuterArc.centroid(d);
+            var posC = goalsOuterArc.centroid(d);
+            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+            posC[0] = goalsRadius * 0.95 * (midangle < Math.PI ? 1 : -1);
+            return [posA, posB, posC];
+        });
+
+    overallGoalsContainer.selectAll("allLabels")
+        .data(overallGoalsPie(teamsData))
+        .enter()
+        .append("text")
+        .text(function (d) { return d.data.name + "(" + d.data.goals + ")"; })
+        .attr("transform", function (d) {
+            var pos = goalsOuterArc.centroid(d);
+            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+            pos[0] = goalsRadius * 0.99 * (midangle < Math.PI ? 1 : -1);
+            return "translate(" + pos + ")";
+        })
+        .style("text-anchor", function (d) {
+            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+            return (midangle < Math.PI ? "start" : "end")
+        })
+        .style("font-size", goalsPiechartLabelFontSize)
+        .style("font-family", defaultFontFamily);
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</html>

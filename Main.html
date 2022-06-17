@@ -83,7 +83,7 @@
 
     for (i = 0; i < 4; i++) {
         svg.append("text")
-            .attr("id", "team" + i.toString())
+            .attr("id", "team" + i)
             .attr("x", 100)
             .attr("y", teamsTextY)
             .text(teamsData[i].name)
@@ -101,6 +101,7 @@
     }
 
     var overallLeagueStatsText = svg.append("text")
+        .attr("id", "HNL")
         .attr("x", 950)
         .attr("y", 425)
         .text("1. HNL")
@@ -134,6 +135,11 @@
         .on("click", function () {
             switchPage("./RijekaPage.html");
         })
+
+    d3.select("#HNL")
+        .on("click", function () {
+            switchPage("./HNLPage.html")
+        });
 
     function switchPage(href) {
         window.location.href = href;
