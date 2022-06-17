@@ -10,6 +10,7 @@ var sectionTextFontSize = "40px";
 var normalTextFontSize = "30px";
 var smallTextFontSize = "20px";
 var ultrasmallTextFontSize = "13px";
+var goalsPiechartLabelFontSize = "15px";
 
 //====================CLUB PAGES ATTRIBUTES====================//
 
@@ -86,6 +87,30 @@ var goalRatioScatterplotY = 400;
 
 //==========CLEANSHEETS BARCHART ATTRIBUTES==========//
 var cleansheetsBarchartY = goalRatioScatterplotY + 350;
+
+
+//==========OVERALL GOALS PIECHART ATTRIBUTES==========//
+var innerRadius2 = 95;
+var outerRadius2 = 150;
+var outerRadiusOnHover2 = 175;
+var goalsRadius = 150;
+var goalsDefaultArc = d3.arc()
+    .innerRadius(goalsRadius * 0.5)
+    .outerRadius(goalsRadius * 0.9);
+
+var goalsArcOnHover = d3.arc()
+    .innerRadius(goalsRadius * 0.8)
+    .outerRadius(goalsRadius * 0.8);
+
+var goalsOuterArc = d3.arc()
+    .innerRadius(goalsRadius * 0.99)
+    .outerRadius(goalsRadius * 0.99);
+
+var overallGoalsPiechartX = 2.5 * commonClubRatioElementX;
+var arcColors = ["cornflowerblue", "green", "black", "teal", "magenta", "papayawhip", "navy", "red", "sienna", "purple", "blue"];
+
+
+
 
 
 

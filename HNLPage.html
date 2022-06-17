@@ -239,6 +239,87 @@
         .attr("x", function (d) { return cleansheetsBarchartXScale(d.name); })
         .style("opacity", 1);
 
+    //OVERALL GOALS RATIO PIECHART
+
+    var overallGoalsText = svg.append("text")
+        .text("Golovi: " + leagueDataBySeasons[0].goalsscored)
+        .attr("x", commonClubRatioElementX)
+        .attr("y", commonTitleTextY + defaultClubRatioElementHeight + 950)
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    var overallGoalsContainer = svg.append("g")
+        .attr("transform", "translate(" + (overallGoalsPiechartX + 75) + "," + (commonTitleTextY + defaultClubRatioElementHeight + 1150) + " )");
+
+    var overallGoalsPie = d3.pie()
+        .value(function (d) { return d.goals; });
+
+    var overallGoalsPieArcs = svg.selectAll("g.pie")
+        .data(overallGoalsPie(teamsData))
+        .enter()
+        .append("path")
+        .attr("transform", "translate(" + (overallGoalsPiechartX + 75) + ", " + (commonTitleTextY + defaultClubRatioElementHeight + 1150) + ")")
+        .attr("d", goalsDefaultArc)
+        .attr("stroke", "#808080")
+        .style("stroke-width", "3px")
+        .style("fill", "black")
+        .on("mouseover", function () {
+            d3.select(this)
+                .transition()
+                .duration(250)
+                .style("fill", "red");
+        })
+        .on("mouseout", function () {
+            d3.select(this)
+                .transition()
+                .duration(250)
+                .style("fill", "black");
+        })
+
+    overallGoalsContainer.selectAll("allPolylines")
+        .data(overallGoalsPie(teamsData))
+        .enter()
+        .append("polyline")
+        .attr("stroke", "black")
+        .style("fill", "none")
+        .attr("stroke-width", 2)
+        .attr("points", function (d) {
+            var posA = goalsDefaultArc.centroid(d);
+            var posB = goalsOuterArc.centroid(d);
+            var posC = goalsOuterArc.centroid(d);
+            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+            posC[0] = goalsRadius * 0.95 * (midangle < Math.PI ? 1 : -1);
+            return [posA, posB, posC];
+        });
+    overallGoalsContainer.selectAll("allLabels")
+        .data(overallGoalsPie(teamsData))
+        .enter()
+        .append("text")
+        .text(function (d) { return d.data.name + "(" + d.data.goals + ")"; })
+        .attr("transform", function (d) {
+            var pos = goalsOuterArc.centroid(d);
+            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+            pos[0] = goalsRadius * 0.99 * (midangle < Math.PI ? 1 : -1);
+            return "translate(" + pos + ")";
+        })
+        .style("text-anchor", function (d) {
+            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+            return (midangle < Math.PI ? "start" : "end")
+        })
+        .style("font-size", goalsPiechartLabelFontSize)
+        .style("font-family", defaultFontFamily);
+
+</script>
+
+
+
+
+
+
+
+
+
+
 </script>
 
 </html>
