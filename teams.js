@@ -9,7 +9,6 @@ var teamsData = [
         "foreignplayers": 16,
         "goals": 64,
         "goalsconceded": 31,
-        "possessionpercentage": 55.8,
         "cleansheets": 18
     },
     {
@@ -22,7 +21,6 @@ var teamsData = [
         "foreignplayers": 10,
         "goals": 49,
         "goalsconceded": 29,
-        "possessionpercentage": 49.2,
         "cleansheets": 17
     },
     {
@@ -35,7 +33,6 @@ var teamsData = [
         "foreignplayers": 16,
         "goals": 68,
         "goalsconceded": 22,
-        "possessionpercentage": 62.6,
         "cleansheets": 20
     },
     {
@@ -48,7 +45,6 @@ var teamsData = [
         "foreignplayers": 17,
         "goals": 71,
         "goalsconceded": 51,
-        "possessionpercentage": 53.3,
         "cleansheets": 9
     },
     {
@@ -61,7 +57,6 @@ var teamsData = [
         "foreignplayers": 14,
         "goals": 43,
         "goalsconceded": 50,
-        "possessionpercentage": 48.6,
         "cleansheets": 9
     },
     {
@@ -74,7 +69,6 @@ var teamsData = [
         "foreignplayers": 15,
         "goals": 55,
         "goalsconceded": 50,
-        "possessionpercentage": 51.1,
         "cleansheets": 6
     },
     {
@@ -87,7 +81,6 @@ var teamsData = [
         "foreignplayers": 8,
         "goals": 35,
         "goalsconceded": 54,
-        "possessionpercentage": 46.3,
         "cleansheets": 6
     },
     {
@@ -100,7 +93,6 @@ var teamsData = [
         "foreignplayers": 15,
         "goals": 46,
         "goalsconceded": 75,
-        "possessionpercentage": 42.8,
         "cleansheets": 1
     },
     {
@@ -113,7 +105,6 @@ var teamsData = [
         "foreignplayers": 14,
         "goals": 42,
         "goalsconceded": 67,
-        "possessionpercentage": 51.8,
         "cleansheets": 5
     },
     {
@@ -126,7 +117,6 @@ var teamsData = [
         "foreignplayers": 6,
         "goals": 31,
         "goalsconceded": 75,
-        "possessionpercentage": 38.5,
         "cleansheets": 3
     }
 ];

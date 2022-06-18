@@ -49,7 +49,7 @@
         .attr("y1", commonTitleTextY - 50)
         .attr("x2", HNLsvgWidth / 2)
         .attr("y2", HNLsvgHeight)
-        .style("stroke-width", 10)
+        .style("stroke-width", 5)
         .style("stroke", "black");
 
     //GOAL RATIO  SCATTER PLOT
@@ -240,7 +240,7 @@
         .attr("x", function (d) { return cleansheetsBarchartXScale(d.name); })
         .style("opacity", 1);
 
-    //OVERALL GOALS RATIO PIECHART
+    //OVERALL MARKET VALUE LINECHART
 
     var overallGoalsText = svg.append("text")
         .text("Golovi: " + leagueDataBySeasons[4].goalsscored)
@@ -263,6 +263,7 @@
         .style("font-family", defaultFontFamily)
         .style("fill", "red")
         .style("opacity", 0);
+
     var additionalText = overallGoalsContainer.append("text")
         .text("od svih golova")
         .attr("x", -65)
@@ -373,6 +374,15 @@
     marketValueContainer.append("g")
         .call(d3.axisLeft(marketValueYScale));
 
+
+    marketValueContainer.append("text")
+        .text("Vrijednost[M€]")
+        .attr("y", -45)
+        .attr("x", -150)
+        .attr("transform", "rotate(-90)")
+        .style("font-size", smallTextFontSize)
+        .style("font-family", defaultFontFamily);
+
     marketValueContainer.append("path")
         .datum(leagueDataBySeasons)
         .attr("fill", "none")
@@ -419,15 +429,102 @@
                 .attr("r", 5);
             marketValueText
                 .style("opacity", 0);
+        });
+
+    //HOME/AWAY WIN BARCHART
+
+    var winsLinechartText = svg.append("text")
+        .text("Pobjeda Domaćina/Gosta + Neriješeno")
+        .attr("x", commonLeagueStatsTextElementX)
+        .attr("y", commonSecondElementY - textElementDifference)
+        .style("font-size", normalTextFontSize)
+        .style("font-family", defaultFontFamily);
+
+    var matchesBySeasonsContainer = svg.append("g")
+        .attr("transform", "translate(" + commonLeagueStatsElementX + "," + commonSecondElementY + ")")
+
+    var choices = ["Domaći", "Gosti", "Neriješeno", "Sveukupno"];
+
+    var customButtons = matchesBySeasonsContainer.selectAll("rect")
+        .data(choices)
+        .enter()
+        .append("rect")
+        .attr("id", function (d, i) { return "button" + i })
+        .attr("x", function (d, i) {
+            if (i == 0) {
+                return 0 + i * buttonWidth;
+            }
+            return 0 + i * buttonWidth + buttonOffset * i;
+        })
+        .attr("y", defaultClubRatioElementHeight + 55)
+        .attr("width", buttonWidth)
+        .attr("height", buttonHeight)
+        .attr("stroke", "black")
+        .style("fill", function (d, i) {
+            if (i == 0) { return "green"; }
+            else if (i == 1) { return "blue"; }
+            else if (i == 2) { return "magenta"; }
+            return "red";
+        })
+        .on("click", function () {
+            var currentElementID = d3.select(this).attr("id");
+            customButtons
+                .attr("stroke-width", 1)
+                .attr("height", buttonHeight);
+            d3.select(this)
+                .attr("stroke-width", 3)
+                .attr("height", buttonHeight - 10);
+            switch (currentElementID) {
+                case "button0": displayHomeWins(); break;
+                case "button1": displayAwayWins(); break;
+                case "button2": displayDraws(); break;
+                case "button3": displayOverallMatches(); break;
+            }
+        })
+        .on("mouseover",function(){
+            customButtons
+                .attr("stroke-width", 1);
+            d3.select(this)
+                .attr("stroke-width", 3);
+        })
+        .on("mouseout",function(){
+            customButtons
+                .attr("stroke-width", 1);
         })
 
-    marketValueContainer.append("text")
-        .text("Vrijednost[M€]")
-        .attr("y", -45)
-        .attr("x", -150)
-        .attr("transform", "rotate(-90)")
-        .style("font-size", smallTextFontSize)
-        .style("font-family", defaultFontFamily);
+    var customButtonsText = matchesBySeasonsContainer.selectAll("text")
+        .data(choices)
+        .enter()
+        .append("text")
+        .text(function (d) { return d; })
+        .attr("x", function (d, i) {
+            if (i == 0) {
+                return 0 + i * buttonWidth;
+            }
+            return 0 + i * buttonWidth + buttonOffset * i;
+        })
+        .attr("y", defaultClubRatioElementHeight + 45);
+
+    var matchesXScale = d3.scaleBand()
+        .domain(seasonsArray)
+        .range([0, (defaultLeagueStatsElementWidth + 150)])
+        .padding(1);
+
+    homeWinsBySeason = leagueDataBySeasons.map(object => { return object.hometeamwins; });
+    awayWinsBySeason = leagueDataBySeasons.map(object => { return object.awayteamwins; });
+    drawsBySeason = leagueDataBySeasons.map(object => { return object.draws; });
+
+    var matchesYScale = d3.scaleLinear()
+        .domain([overallMaxMatches() + 5, overallMinMatches() - 5])
+        .range([0, defaultLeagueStatsElementHeight]);
+
+    matchesBySeasonsContainer.append("g")
+        .attr("transform", "translate(0," + defaultLeagueStatsElementHeight + ")")
+        .call(d3.axisBottom(matchesXScale));
+
+    matchesBySeasonsContainer.append("g")
+        .call(d3.axisLeft(matchesYScale));
+
 
 </script>
 

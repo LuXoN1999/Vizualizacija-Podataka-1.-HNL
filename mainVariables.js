@@ -78,7 +78,7 @@ var defaultClubRatioElementWidth = 350;
 var defaultClubRatioElementHeight = 350;
 
 //===LEAGUE STATS===//
-var commonLeagueStatsElementX = svgWidth / 2 + 150;
+var commonLeagueStatsElementX = svgWidth / 2 + 100;
 var commonLeagueStatsTextElementX = commonLeagueStatsElementX;
 var defaultLeagueStatsElementWidth = 350;
 var defaultLeagueStatsElementHeight = 350;
@@ -101,6 +101,14 @@ var goalsOuterArc = d3.arc()
     .outerRadius(goalsRadius);
 
 var overallGoalsPiechartX = 2.5 * commonClubRatioElementX;
+
+//==========MATCHES BARCHART ATTRIBUTES==========//
+var firstButtonX = 20;
+var commonButtonY = 20;
+var buttonOffset = 25;
+var buttonWidth = 80;
+var buttonHeight = 30;
+
 
 //====================OTHER VARIABLES====================//
 var totalGamesPlayed = 36;
