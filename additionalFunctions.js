@@ -41,6 +41,11 @@ function clearBarchart() {
                 return 0;
             }
         });
+
+    barText
+    .transition()
+    .duration(400)
+    .style("opacity",0);
 }
 
 var barWidth = 45;

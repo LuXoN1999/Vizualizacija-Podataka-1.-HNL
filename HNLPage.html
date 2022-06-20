@@ -38,7 +38,7 @@
         .style("font-family", defaultFontFamily);
 
     svg.append("text")
-        .text("STATISTIKA LIGE")
+        .text("PODACI O LIGI")
         .attr("x", svgWidth / 2 + 10)
         .attr("y", commonTitleTextY)
         .style("font-size", normalTextFontSize)
@@ -69,6 +69,7 @@
     var goalRatioScatterplotXScale = d3.scaleLinear()
         .range([0, defaultClubRatioElementWidth])
         .domain([Math.min(...concededGoalsArray) - 5, Math.max(...concededGoalsArray) + 5]);
+
     var goalRatioScatterplotYScale = d3.scaleLinear()
         .range([defaultClubRatioElementHeight, 0])
         .domain([Math.min(...scoredGoalsArray) - 5, Math.max(...scoredGoalsArray) + 5]);
@@ -343,7 +344,7 @@
         .style("font-size", goalsPiechartLabelFontSize)
         .style("font-family", defaultFontFamily);
 
-
+    //WINS LINECHART
     var winsLinechartText = svg.append("text")
         .text("Sveukupna vrijednost(€)")
         .attr("x", commonLeagueStatsTextElementX)
@@ -535,8 +536,6 @@
         .style("font-size", smallTextFontSize)
         .style("font-family", defaultFontFamily)
         .style("opacity", 0);
-
-
 
 </script>
 
