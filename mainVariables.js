@@ -61,27 +61,27 @@ var WDLBarchartY = svgHeight / 3 + 30;
 var WDLBarchartWidth = 150;
 var WDLBarchartHeight = 400;
 
-//==========OTHER VARIABLES==========//
-var totalGamesPlayed = 36;
-
-
 //====================LEAGUE PAGE ATTRIBUTES====================//
-var HNLsvgWidth = 1465;
-var HNLsvgHeight = 2000;
-var leagueLogoWidth = 450;
-var leagueLogoHeight = 150;
-var leagueLogoX = 50;
-var leagueLogoY = svgHeight / 15;
+//===COMMON===//
 var commonTitleTextY = svgHeight / 3;
+
+var commonFirstElementY = 400;
+var commonSecondElementY = commonFirstElementY + 550;
+var commonThirdElementY = commonSecondElementY + 550;
+
+var textElementDifference = 50;
+
+//===CLUB RATIO===//
 var commonClubRatioElementX = svgWidth / 4 - 250;
+var commonGoalRatioTextElementX = commonClubRatioElementX;
 var defaultClubRatioElementWidth = 350;
 var defaultClubRatioElementHeight = 350;
 
-//==========GOAL RATIO SCATTERPLOT ATTRIBUTES==========//
-var goalRatioScatterplotY = 400;
-
-//==========CLEANSHEETS BARCHART ATTRIBUTES==========//
-var cleansheetsBarchartY = goalRatioScatterplotY + 350;
+//===LEAGUE STATS===//
+var commonLeagueStatsElementX = svgWidth / 2 + 100;
+var commonLeagueStatsTextElementX = commonLeagueStatsElementX;
+var defaultLeagueStatsElementWidth = 350;
+var defaultLeagueStatsElementHeight = 350;
 
 //==========OVERALL GOALS PIECHART ATTRIBUTES==========//
 var innerRadius2 = 95;
@@ -101,7 +101,29 @@ var goalsOuterArc = d3.arc()
     .outerRadius(goalsRadius);
 
 var overallGoalsPiechartX = 2.5 * commonClubRatioElementX;
-var arcColors = ["cornflowerblue", "green", "black", "teal", "magenta", "papayawhip", "navy", "red", "sienna", "purple", "blue"];
+
+//==========MATCHES BARCHART ATTRIBUTES==========//
+var firstButtonX = 20;
+var commonButtonY = 20;
+var buttonOffset = 25;
+var buttonWidth = 80;
+var buttonHeight = 30;
+
+//====================OTHER VARIABLES====================//
+var totalGamesPlayed = 36;
+var HNLsvgWidth = 1465;
+var HNLsvgHeight = 2000;
+var leagueLogoWidth = 450;
+var leagueLogoHeight = 150;
+var leagueLogoX = 50;
+var leagueLogoY = svgHeight / 15;
+
+
+
+
+
+
+
 
 
 
