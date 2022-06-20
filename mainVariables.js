@@ -109,7 +109,6 @@ var buttonOffset = 25;
 var buttonWidth = 80;
 var buttonHeight = 30;
 
-
 //====================OTHER VARIABLES====================//
 var totalGamesPlayed = 36;
 var HNLsvgWidth = 1465;

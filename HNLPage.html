@@ -481,13 +481,13 @@
                 case "button3": displayOverallMatches(); break;
             }
         })
-        .on("mouseover",function(){
+        .on("mouseover", function () {
             customButtons
                 .attr("stroke-width", 1);
             d3.select(this)
                 .attr("stroke-width", 3);
         })
-        .on("mouseout",function(){
+        .on("mouseout", function () {
             customButtons
                 .attr("stroke-width", 1);
         })
@@ -524,6 +524,18 @@
 
     matchesBySeasonsContainer.append("g")
         .call(d3.axisLeft(matchesYScale));
+
+
+    var barText = matchesBySeasonsContainer.selectAll("barText")
+        .data(leagueDataBySeasons)
+        .enter()
+        .append("text")
+        .attr("x", function (d) { return matchesXScale(d.seasonyear) - 12.5; })
+        .attr("y", 0)
+        .style("font-size", smallTextFontSize)
+        .style("font-family", defaultFontFamily)
+        .style("opacity", 0);
+
 
 
 </script>

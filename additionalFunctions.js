@@ -63,6 +63,13 @@ function displayHomeWins() {
         .transition()
         .duration(1500)
         .style("opacity", 1);
+
+    barText
+        .text(function (d) { return d.hometeamwins; })
+        .transition()
+        .duration(1500)
+        .attr("y", function (d) { return matchesYScale(d.hometeamwins) - 5; })
+        .style("opacity", 1);
 }
 
 function displayAwayWins() {
@@ -83,10 +90,22 @@ function displayAwayWins() {
         .transition()
         .duration(1500)
         .style("opacity", 1);
+
+    barText
+        .text(function (d) { return d.awayteamwins; })
+        .transition()
+        .duration(1500)
+        .attr("y", function (d) { return matchesYScale(d.awayteamwins) - 5; })
+        .style("opacity", 1);
 }
 
 function displayDraws() {
     clearBarchart();
+
+    barText.transition()
+        .duration(1000)
+        .style("opacity", 0);
+
     matchesBySeasonsContainer.selectAll("mybar")
         .data(leagueDataBySeasons)
         .enter()
@@ -102,6 +121,13 @@ function displayDraws() {
         .style("opacity", 0)
         .transition()
         .duration(1500)
+        .style("opacity", 1);
+
+    barText
+        .text(function (d) { return d.draws; })
+        .transition()
+        .duration(1500)
+        .attr("y", function (d) { return matchesYScale(d.draws) - 5; })
         .style("opacity", 1);
 }
 
@@ -155,6 +181,4 @@ function displayOverallMatches() {
         .transition()
         .duration(1500)
         .style("opacity", 1);
-
-
 }
